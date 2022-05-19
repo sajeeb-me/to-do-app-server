@@ -31,9 +31,23 @@ async function run() {
             res.send(task)
         })
 
+        app.patch('/task/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const time = req.body.time;
+            console.log(time);
+            const updateDoc = {
+                $set: {
+                    completed: true,
+                    completedTime: time,
+                }
+            }
+            const updatedTask = await taskCollection.updateOne(filter, updateDoc);
+            res.send(updatedTask)
+        })
+
         app.delete('/task/:id', async (req, res) => {
             const id = req.params.id;
-            console.log(id);
             const filter = { _id: ObjectId(id) };
             const result = await taskCollection.deleteOne(filter);
             res.send(result)
